@@ -1,0 +1,16 @@
+x.DS_Store
+
+## IntelliJ files
+.idea/
+
+## Build files
+target/
+
+## Artifact files
+out/
+
+## Java class files
+*.class
+
+* Properties
+**/resources/*.properties
