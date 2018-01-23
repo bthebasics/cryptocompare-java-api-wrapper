@@ -20,6 +20,11 @@ public class ApiUtils {
     private static final Logger logger = LoggerFactory.getLogger(ApiUtils.class);
 
     /**
+     * User agent for HTTP requests
+     */
+    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2";
+
+    /**
      * Google JSON parser
      */
     private static JsonParser jsonParser = new JsonParser();
@@ -37,7 +42,10 @@ public class ApiUtils {
      */
     public static String appendOptionalParameters(String url, Map<String, Object> optionalParams) {
         for (Map.Entry<String, Object> param : optionalParams.entrySet()) {
-            String value = param.getValue().toString().replaceAll(" ", "%20");
+            String value = (param.getKey().equals("extraParams"))
+                    ? param.getValue().toString().replaceAll(" ", "%20")
+                    : param.getValue().toString();
+
             url += "&" + param.getKey() + "=" + value;
         }
         return url;
@@ -55,6 +63,7 @@ public class ApiUtils {
             URL url = new URL(requestUrl);
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
             httpsURLConnection.setRequestMethod("GET");
+            httpsURLConnection.setRequestProperty("User-Agent", USER_AGENT);
 
             // Stream the response
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));

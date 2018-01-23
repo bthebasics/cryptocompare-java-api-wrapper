@@ -4,9 +4,7 @@ import com.google.gson.JsonObject;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CryptoCompareApiTest {
@@ -443,5 +441,331 @@ public class CryptoCompareApiTest {
 
         assertTrue(exchangeResponseConversion.has("type"));
         assertTrue(exchangeResponseConversion.has("conversionSymbol"));
+    }
+
+    @Test
+    public void PriceHistoricalTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject basicResponse = api.priceHistorical(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("ts", "1452680400");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(basicResponse.has("BTC"));
+        assertTrue(basicResponse.get("BTC").getAsJsonObject().has("USD"));
+    }
+
+    @Test
+    public void CoinSnapshotTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcSnapshotResponse = api.coinSnapshot(
+                "BTC",
+                "USD"
+        );
+
+        assertTrue(btcSnapshotResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(btcSnapshotResponse.get("Data").getAsJsonObject().has("Algorithm"));
+        assertTrue(btcSnapshotResponse.get("Data").getAsJsonObject().has("ProofType"));
+
+        // Test 2
+        JsonObject ethSnapshotResponse = api.coinSnapshot(
+                "ETH",
+                "BTC"
+        );
+
+        assertTrue(ethSnapshotResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ethSnapshotResponse.get("Data").getAsJsonObject().has("Algorithm"));
+        assertTrue(ethSnapshotResponse.get("Data").getAsJsonObject().has("ProofType"));
+    }
+
+    @Test
+    public void CoinSnapshotFullByIdTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcResponse = api.coinSnapshotFullById(1182);
+
+        assertTrue(btcResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("ICO"));
+
+        // Test 2
+        JsonObject ltcResponse = api.coinSnapshotFullById(3808);
+
+        assertTrue(ltcResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("ICO"));
+
+        // Test 3
+        JsonObject ethResponse = api.coinSnapshotFullById(7605);
+
+        assertTrue(ethResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("ICO"));
+    }
+
+    @Test
+    public void SocialStats() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcResponse = api.socialStats(1182);
+
+        assertTrue(btcResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("CryptoCompare"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("Twitter"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("Reddit"));
+        assertTrue(btcResponse.get("Data").getAsJsonObject().has("Facebook"));
+
+        // Test 2
+        JsonObject ltcResponse = api.socialStats(3808);
+
+        assertTrue(ltcResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("CryptoCompare"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("Twitter"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("Reddit"));
+        assertTrue(ltcResponse.get("Data").getAsJsonObject().has("Facebook"));
+
+        // Test 3
+        JsonObject ethResponse = api.socialStats(7605);
+
+        assertTrue(ethResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("General"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("CryptoCompare"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("Twitter"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("Reddit"));
+        assertTrue(ethResponse.get("Data").getAsJsonObject().has("Facebook"));
+    }
+
+    @Test
+    public void HistoMinuteTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcUsdHistoMinute = api.histoMinute(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcUsdHistoMinute.get("Response").getAsString().equals("Success"));
+        assertTrue(btcUsdHistoMinute.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 2
+        JsonObject ethUsdHistoMinute = api.histoMinute(
+                "ETH",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "Kraken");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethUsdHistoMinute.get("Response").getAsString().equals("Success"));
+        assertTrue(ethUsdHistoMinute.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 3
+        JsonObject ethBtcHistoMinute = api.histoMinute(
+                "ETH",
+                "BTC",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 1);
+                    put("toTs", "1452680400");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethBtcHistoMinute.get("Response").getAsString().equals("Error"));
+
+        // Test 4
+        JsonObject btcEthHistoMinute = api.histoMinute(
+                "BTC",
+                "ETH",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 30);
+                    put("aggregate", 1);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcEthHistoMinute.get("Response").getAsString().equals("Success"));
+        assertTrue(btcEthHistoMinute.get("Data").getAsJsonArray().size() > 0);
+    }
+
+    @Test
+    public void HistoHourTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcUsdHistoHour = api.histoHour(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcUsdHistoHour.get("Response").getAsString().equals("Success"));
+        assertTrue(btcUsdHistoHour.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 2
+        JsonObject ethUsdHistoHour = api.histoHour(
+                "ETH",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "Kraken");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethUsdHistoHour.get("Response").getAsString().equals("Success"));
+        assertTrue(ethUsdHistoHour.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 3
+        JsonObject ethBtcHistoHour = api.histoHour(
+                "ETH",
+                "BTC",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 1);
+                    put("toTs", "1452680400");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethBtcHistoHour.get("Response").getAsString().equals("Success"));
+        assertTrue(ethBtcHistoHour.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 4
+        JsonObject btcEthHistoHour = api.histoHour(
+                "BTC",
+                "ETH",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 30);
+                    put("aggregate", 1);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcEthHistoHour.get("Response").getAsString().equals("Success"));
+        assertTrue(btcEthHistoHour.get("Data").getAsJsonArray().size() > 0);
+    }
+
+    @Test
+    public void HistoDayTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject btcUsdHistoDay = api.histoDay(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcUsdHistoDay.get("Response").getAsString().equals("Success"));
+        assertTrue(btcUsdHistoDay.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 2
+        JsonObject ethUsdHistoDay = api.histoDay(
+                "ETH",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 3);
+                    put("e", "Kraken");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethUsdHistoDay.get("Response").getAsString().equals("Success"));
+        assertTrue(ethUsdHistoDay.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 3
+        JsonObject ethBtcHistoDay = api.histoDay(
+                "ETH",
+                "BTC",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 60);
+                    put("aggregate", 1);
+                    put("toTs", "1452680400");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(ethBtcHistoDay.get("Response").getAsString().equals("Success"));
+        assertTrue(ethBtcHistoDay.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 4
+        JsonObject btcEthHistoDay = api.histoDay(
+                "BTC",
+                "ETH",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 30);
+                    put("aggregate", 1);
+                    put("e", "CCCAGG");
+                }});
+
+        assertTrue(btcEthHistoDay.get("Response").getAsString().equals("Success"));
+        assertTrue(btcEthHistoDay.get("Data").getAsJsonArray().size() > 0);
+    }
+
+    @Test
+    public void MiningEquipmentTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject miningEquipmentResponse = api.miningEquipment();
+
+        assertTrue(miningEquipmentResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(miningEquipmentResponse.get("MiningData").getAsJsonObject().size() > 0);
+    }
+
+    @Test
+    public void TopPairsTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject ethPairResponse = api.topPairs(
+                "ETH",
+                new LinkedHashMap<String, Object>());
+
+        assertTrue(ethPairResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(ethPairResponse.has("Data"));
+        assertTrue(ethPairResponse.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 2
+        JsonObject btcPairResponse = api.topPairs(
+                "BTC",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 20);
+                }});
+
+        assertTrue(btcPairResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(btcPairResponse.has("Data"));
+        assertTrue(btcPairResponse.get("Data").getAsJsonArray().size() > 0);
+
+        // Test 3
+        JsonObject zecPairResponse = api.topPairs(
+                "ZEC",
+                new LinkedHashMap<String, Object>() {{
+                    put("limit", 20);
+                }});
+
+        assertTrue(zecPairResponse.get("Response").getAsString().equals("Success"));
+        assertTrue(zecPairResponse.has("Data"));
+        assertTrue(zecPairResponse.get("Data").getAsJsonArray().size() > 0);
     }
 }

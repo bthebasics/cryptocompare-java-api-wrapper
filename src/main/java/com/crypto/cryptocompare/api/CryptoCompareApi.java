@@ -19,6 +19,11 @@ public class CryptoCompareApi {
      */
     private final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
+    /**
+     * Original Url (soon to be decremented)
+     */
+    private final String DEPRECATED_URL = "https://cryptocompare.com/api/data/";
+
 
     /*************************
      * Empty Constructor
@@ -168,17 +173,17 @@ public class CryptoCompareApi {
      * trading pair data, if there is none or it is more than 30 days before the ts requested,
      * it uses BTC conversion. If the opposite pair trades we invert it (eg.: BTC-XMR)
      * @param fsym From Symbol
-     * @param tsym To Symbols, include multiple
+     * @param tsyms To Symbols, include multiple
      * @param optionalParams
      * @return
      */
-    public JsonObject priceHistorical(String fsym, String tsym, Map<String, Object> optionalParams) {
+    public JsonObject priceHistorical(String fsym, String tsyms, Map<String, Object> optionalParams) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.BASE_URL)
                 .append("pricehistorical?fsym=")
                 .append(fsym)
-                .append("&tsym=")
-                .append(tsym);
+                .append("&tsyms=")
+                .append(tsyms);
 
         String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
@@ -197,7 +202,7 @@ public class CryptoCompareApi {
      */
     public JsonObject coinSnapshot(String fsym, String tsym) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.BASE_URL)
+        sb.append(this.DEPRECATED_URL)
                 .append("coinsnapshot?fsym=")
                 .append(fsym)
                 .append("&tsym=")
@@ -216,7 +221,7 @@ public class CryptoCompareApi {
      */
     public JsonObject coinSnapshotFullById(Integer id) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.BASE_URL)
+        sb.append(this.DEPRECATED_URL)
                 .append("coinsnapshotfullbyid?id=")
                 .append(id.toString());
 
@@ -233,7 +238,7 @@ public class CryptoCompareApi {
      */
     public JsonObject socialStats(Integer id) {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.BASE_URL)
+        sb.append(this.DEPRECATED_URL)
                 .append("socialstats?id=")
                 .append(id.toString());
 
@@ -248,19 +253,16 @@ public class CryptoCompareApi {
      * coin is not trading in the specified currency
      * @param fsym From Symbol
      * @param tsym To Symbols
-     * @param e Name of exchange
      * @param optionalParams
      * @return
      */
-    public JsonObject histoMinute(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+    public JsonObject histoMinute(String fsym, String tsym, Map<String, Object> optionalParams) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.BASE_URL)
                 .append("histominute?fsym=")
                 .append(fsym)
                 .append("&tsym=")
-                .append(tsym)
-                .append("&e=")
-                .append(e);
+                .append(tsym);
 
         String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
@@ -275,19 +277,16 @@ public class CryptoCompareApi {
      * in the specified currency.
      * @param fsym From Symbol
      * @param tsym To Symbols
-     * @param e Name of exchange
      * @param optionalParams
      * @return
      */
-    public JsonObject histoHour(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+    public JsonObject histoHour(String fsym, String tsym, Map<String, Object> optionalParams) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.BASE_URL)
                 .append("histohour?fsym=")
                 .append(fsym)
                 .append("&tsym=")
-                .append(tsym)
-                .append("&e=")
-                .append(e);
+                .append(tsym);
 
         String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
@@ -302,19 +301,16 @@ public class CryptoCompareApi {
      * the coin is not trading in the specified currency.
      * @param fsym From Symbol
      * @param tsym To Symbols
-     * @param e Name of exchange
      * @param optionalParams
      * @return
      */
-    public JsonObject histoDay(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+    public JsonObject histoDay(String fsym, String tsym, Map<String, Object> optionalParams) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.BASE_URL)
                 .append("histoday?fsym=")
                 .append(fsym)
                 .append("&tsym=")
-                .append(tsym)
-                .append("&e=")
-                .append(e);
+                .append(tsym);
 
         String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
@@ -330,7 +326,7 @@ public class CryptoCompareApi {
      */
     public JsonObject miningEquipment() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.BASE_URL)
+        sb.append(this.DEPRECATED_URL)
                 .append("miningequipment");
 
         JsonObject response = ApiUtils.getResponseBody(sb.toString());
@@ -343,17 +339,14 @@ public class CryptoCompareApi {
      * of pairs you get is the minimum of the limit you set (default 5) and the total number
      * of pairs available
      * @param fsym From Symbol
-     * @param tsym To Symbol
      * @param optionalParams
      * @return
      */
-    public JsonObject topPairs(String fsym, String tsym, Map<String, Object> optionalParams) {
+    public JsonObject topPairs(String fsym, Map<String, Object> optionalParams) {
         StringBuilder sb = new StringBuilder();
         sb.append(this.BASE_URL)
                 .append("top/pairs?fsym=")
-                .append(fsym)
-                .append("&tsym=")
-                .append(tsym);
+                .append(fsym);
 
         String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
