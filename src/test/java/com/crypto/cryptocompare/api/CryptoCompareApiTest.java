@@ -3,6 +3,7 @@ package com.crypto.cryptocompare.api;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -26,52 +27,44 @@ public class CryptoCompareApiTest {
         JsonObject basicResponse = api.price(
                 "ETH",
                 "BTC,USD,EUR",
-                null,
-                null,
-                null,
-                null);
+                new LinkedHashMap<String, Object>());
 
         assertTrue(basicResponse.has("BTC"));
         assertTrue(basicResponse.has("USD"));
         assertTrue(basicResponse.has("EUR"));
 
-
+        // Test 2
         JsonObject appNameResponse = api.price(
                 "ETH",
                 "BTC,USD,EUR",
-                null,
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null
-        );
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(appNameResponse.has("BTC"));
         assertTrue(appNameResponse.has("USD"));
         assertTrue(appNameResponse.has("EUR"));
 
-        // Test 2
+        // Test 3
         JsonObject appNameWithSpaceResponse = api.price(
                 "ETH",
                 "BTC,USD,EUR",
-                null,
-                Optional.of("Crypto Compare Wrapper"),
-                null,
-                null
-        );
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "Crypto Compare Wrapper");
+                }});
 
         assertTrue(appNameWithSpaceResponse.has("BTC"));
         assertTrue(appNameWithSpaceResponse.has("USD"));
         assertTrue(appNameWithSpaceResponse.has("EUR"));
 
-        // Test 3
+        // Test 4
         JsonObject exchangeResponse = api.price(
                 "BTC",
                 "USD,EUR",
-                Optional.of("Coinbase"),
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null
-        );
+                new LinkedHashMap<String, Object>() {{
+                    put("e", "Coinbase");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(exchangeResponse.has("USD"));
         assertTrue(exchangeResponse.has("EUR"));
@@ -85,10 +78,7 @@ public class CryptoCompareApiTest {
         JsonObject basicResponse = api.priceMulti(
                 "ETH,DASH",
                 "BTC,USD,EUR",
-                null,
-                null,
-                null,
-                null);
+                new LinkedHashMap<String, Object>());
 
         assertTrue(basicResponse.has("ETH"));
         assertTrue(basicResponse.has("DASH"));
@@ -107,10 +97,9 @@ public class CryptoCompareApiTest {
         JsonObject appNameResponse = api.priceMulti(
                 "ETH,DASH",
                 "BTC,USD,EUR",
-                null,
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(appNameResponse.has("ETH"));
         assertTrue(appNameResponse.has("DASH"));
@@ -129,10 +118,9 @@ public class CryptoCompareApiTest {
         JsonObject altCoinResponse = api.priceMulti(
                 "REP,BTC",
                 "USD,XMR",
-                null,
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(altCoinResponse.has("REP"));
         assertTrue(altCoinResponse.has("BTC"));
@@ -149,10 +137,10 @@ public class CryptoCompareApiTest {
         JsonObject exchangeResponse = api.priceMulti(
                 "BTC,ETH",
                 "USD",
-                Optional.of("Coinbase"),
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("e", "Coinbase");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(exchangeResponse.has("BTC"));
         assertTrue(exchangeResponse.has("ETH"));
@@ -172,10 +160,7 @@ public class CryptoCompareApiTest {
         JsonObject basicResponse = api.priceMultiFull(
                 "ETH,DASH",
                 "BTC,USD,EUR",
-                null,
-                null,
-                null,
-                null);
+                new LinkedHashMap<String, Object>());
 
         assertTrue(basicResponse.has("RAW"));
         assertTrue(basicResponse.has("DISPLAY"));
@@ -199,10 +184,9 @@ public class CryptoCompareApiTest {
         JsonObject appNameResponse = api.priceMultiFull(
                 "ETH,DASH",
                 "BTC,USD,EUR",
-                null,
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(appNameResponse.has("RAW"));
         assertTrue(appNameResponse.has("DISPLAY"));
@@ -226,10 +210,9 @@ public class CryptoCompareApiTest {
         JsonObject altCoinResponse = api.priceMultiFull(
                 "REP,BTC",
                 "USD,XMR",
-                null,
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(altCoinResponse.has("RAW"));
         assertTrue(altCoinResponse.has("DISPLAY"));
@@ -251,10 +234,10 @@ public class CryptoCompareApiTest {
         JsonObject exchangeResponse = api.priceMultiFull(
                 "BTC,ETH",
                 "USD",
-                Optional.of("Coinbase"),
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("e", "Coinbase");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(exchangeResponse.has("RAW"));
         assertTrue(exchangeResponse.has("DISPLAY"));
@@ -280,9 +263,7 @@ public class CryptoCompareApiTest {
                 "BTC",
                 "USD",
                 "Coinbase,Bitfinex",
-                null,
-                null,
-                null);
+                new LinkedHashMap<String, Object>());
 
         assertTrue(basicResponse.has("RAW"));
         assertTrue(basicResponse.has("DISPLAY"));
@@ -299,9 +280,9 @@ public class CryptoCompareApiTest {
                 "ETH",
                 "BTC",
                 "Poloniex,Kraken,Coinbase,HitBTC",
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(appNameResponse.has("RAW"));
         assertTrue(appNameResponse.has("DISPLAY"));
@@ -318,9 +299,9 @@ public class CryptoCompareApiTest {
                 "ZEC",
                 "USD",
                 "Poloniex,Bitfinex",
-                Optional.of("CryptoCompareWrapper"),
-                null,
-                null);
+                new LinkedHashMap<String, Object>() {{
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
 
         assertTrue(exchangeResponse.has("RAW"));
         assertTrue(exchangeResponse.has("DISPLAY"));
@@ -331,5 +312,136 @@ public class CryptoCompareApiTest {
         assertTrue(exchangeResponseDisplay.has("TOSYMBOL"));
         assertTrue(exchangeResponseDisplay.has("MARKET"));
         assertTrue(exchangeResponseDisplay.has("PRICE"));
+    }
+
+    @Test
+    public void DayAvgTest() {
+        CryptoCompareApi api = new CryptoCompareApi();
+
+        // Test 1
+        JsonObject basicResponse = api.dayAvg(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("UTCHourDiff", "-8");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(basicResponse.has("USD"));
+        assertTrue(basicResponse.has("ConversionType"));
+
+        JsonObject basicResponseConversion = basicResponse.get("ConversionType").getAsJsonObject();
+
+        assertTrue(basicResponseConversion.has("type"));
+        assertTrue(basicResponseConversion.has("conversionSymbol"));
+
+        // Test 2
+        JsonObject basicResponse2 = api.dayAvg(
+                "ETH",
+                "GBP",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(basicResponse2.has("GBP"));
+        assertTrue(basicResponse2.has("ConversionType"));
+
+        JsonObject basicResponse2Conversion = basicResponse2.get("ConversionType").getAsJsonObject();
+
+        assertTrue(basicResponse2Conversion.has("type"));
+        assertTrue(basicResponse2Conversion.has("conversionSymbol"));
+
+        // Test 3
+        JsonObject noConversionResponse = api.dayAvg(
+                "ETH",
+                "GBP",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("tryConversion", false);
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(noConversionResponse.has("GBP"));
+        assertTrue(noConversionResponse.has("ConversionType"));
+
+        JsonObject noConversionResponseConversion = noConversionResponse.get("ConversionType").getAsJsonObject();
+
+        assertTrue(noConversionResponseConversion.has("type"));
+        assertTrue(noConversionResponseConversion.has("conversionSymbol"));
+
+        // Test 4
+        JsonObject avgTypeResponse = api.dayAvg(
+                "ETH",
+                "GBP",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("avgType", "MidHighLow");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(avgTypeResponse.has("GBP"));
+        assertTrue(avgTypeResponse.has("ConversionType"));
+
+        JsonObject avgTypeResponseConversion = avgTypeResponse.get("ConversionType").getAsJsonObject();
+
+        assertTrue(avgTypeResponseConversion.has("type"));
+        assertTrue(avgTypeResponseConversion.has("conversionSymbol"));
+
+        // Test 5
+        JsonObject avgTypeNoConversionResponse = api.dayAvg(
+                "ETH",
+                "GBP",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("avgType", "MidHighLow");
+                    put("tryConversion", false);
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(avgTypeNoConversionResponse.has("GBP"));
+        assertTrue(avgTypeNoConversionResponse.has("ConversionType"));
+
+        JsonObject avgTypeNoConversionResponseConversion = avgTypeNoConversionResponse.get("ConversionType").getAsJsonObject();
+
+        assertTrue(avgTypeNoConversionResponseConversion.has("type"));
+        assertTrue(avgTypeNoConversionResponseConversion.has("conversionSymbol"));
+
+        // Test 6
+        JsonObject avgTypeResponse2 = api.dayAvg(
+                "ETH",
+                "GBP",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("avgType", "VolFVolT");
+                    put("tryConversion", false);
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(avgTypeResponse2.has("GBP"));
+        assertTrue(avgTypeResponse2.has("ConversionType"));
+
+        JsonObject avgTypeResponse2Conversion = avgTypeResponse2.get("ConversionType").getAsJsonObject();
+
+        assertTrue(avgTypeResponse2Conversion.has("type"));
+        assertTrue(avgTypeResponse2Conversion.has("conversionSymbol"));
+
+        // Test 7
+        JsonObject exchangeResponse = api.dayAvg(
+                "BTC",
+                "USD",
+                new LinkedHashMap<String, Object>() {{
+                    put("toTs", "1487116800");
+                    put("e", "Bitfinex");
+                    put("extraParams", "CryptoCompareWrapper");
+                }});
+
+        assertTrue(exchangeResponse.has("USD"));
+        assertTrue(exchangeResponse.has("ConversionType"));
+
+        JsonObject exchangeResponseConversion = exchangeResponse.get("ConversionType").getAsJsonObject();
+
+        assertTrue(exchangeResponseConversion.has("type"));
+        assertTrue(exchangeResponseConversion.has("conversionSymbol"));
     }
 }

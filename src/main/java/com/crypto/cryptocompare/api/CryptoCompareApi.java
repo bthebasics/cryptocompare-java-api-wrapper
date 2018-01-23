@@ -1,16 +1,11 @@
 package com.crypto.cryptocompare.api;
 
+import com.crypto.cryptocompare.utils.ApiUtils;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Optional;
+import java.util.Map;
 
 public class CryptoCompareApi {
 
@@ -24,18 +19,12 @@ public class CryptoCompareApi {
      */
     private final String BASE_URL = "https://min-api.cryptocompare.com/data/";
 
-    /**
-     * Google JSON parser
-     */
-    private JsonParser jsonParser;
 
     /*************************
-     * Constructor
+     * Empty Constructor
      *************************/
 
-    public CryptoCompareApi() {
-        this.jsonParser = new JsonParser();
-    }
+    public CryptoCompareApi() {}
 
     /**
      * Get general info for all the coins available on the website
@@ -43,7 +32,7 @@ public class CryptoCompareApi {
      */
     public JsonObject coinList() {
         String requestUrl = this.BASE_URL + "all/coinlist";
-        JsonObject response = getResponseBody(requestUrl);
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
         return response;
     }
 
@@ -51,88 +40,42 @@ public class CryptoCompareApi {
      * Get the price of a currency against multiple currencies
      * @param fsym from symbol
      * @param tsyms to symbols, include multiple symbols
-     * @param e name of exchange. default: CCCAGG
-     * @param extraParams name of your application
-     * @param sign if set to true, the server will sign the requests
-     * @param tryConversion if set to false, it will try to get values without using any conversion at all
+     * @param optionalParams
      * @return
      * TODO: handle errors/space characters in tsyms
      */
-    public JsonObject price(String fsym, String tsyms, Optional<String> e, Optional<String> extraParams,
-                            Optional<Boolean> sign, Optional<Boolean> tryConversion) {
-        StringBuilder requestUrl = new StringBuilder();
-        requestUrl.append(this.BASE_URL)
+    public JsonObject price(String fsym, String tsyms, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
                 .append("price?fsym=")
                 .append(fsym)
                 .append("&tsyms=")
                 .append(tsyms);
 
-        if (e != null && e.isPresent()) {
-            requestUrl.append("&e=")
-                    .append(e.get());
-        }
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
-        if (extraParams != null && extraParams.isPresent()) {
-            String exchangeName = extraParams.get().replaceAll(" ", "%20");
-            requestUrl.append("&extraParams=")
-                    .append(exchangeName);
-        }
-
-        if (sign != null && sign.isPresent()) {
-            requestUrl.append("&sign=")
-                    .append(sign.get().toString());
-        }
-
-        if (tryConversion != null && tryConversion.isPresent()) {
-            requestUrl.append("&tryConversion=")
-                    .append(tryConversion.get().toString());
-        }
-
-        JsonObject response = getResponseBody(requestUrl.toString());
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
         return response;
     }
-
 
     /**
      * Get a matrix of currency prices
      * @param fsyms From Symbols, include multiple symbols
      * @param tsyms To Symbols, include multiple symbols
-     * @param e Name of exchange. Default: CCCAGG
-     * @param extraParams Name of your application
-     * @param sign If set to true, the server will sign the requests
-     * @param tryConversion If set to false, it will try to get values without using any conversion at all
+     * @param optionalParams
      * @return
      */
-    public JsonObject priceMulti(String fsyms, String tsyms, Optional<String> e, Optional<String> extraParams, Optional<Boolean> sign, Optional<Boolean> tryConversion) {
-        StringBuilder requestUrl = new StringBuilder();
-        requestUrl.append(this.BASE_URL)
+    public JsonObject priceMulti(String fsyms, String tsyms, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
                 .append("pricemulti?fsyms=")
                 .append(fsyms)
                 .append("&tsyms=")
                 .append(tsyms);
 
-        if (e != null && e.isPresent()) {
-            requestUrl.append("&e=")
-                    .append(e.get());
-        }
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
-        if (extraParams != null && extraParams.isPresent()) {
-            String exchangeName = extraParams.get().replaceAll(" ", "%20");
-            requestUrl.append("&extraParams=")
-                    .append(exchangeName);
-        }
-
-        if (sign != null && sign.isPresent()) {
-            requestUrl.append("&sign=")
-                    .append(sign.get().toString());
-        }
-
-        if (tryConversion != null && tryConversion.isPresent()) {
-            requestUrl.append("&tryConversion=")
-                    .append(tryConversion.get().toString());
-        }
-
-        JsonObject response = getResponseBody(requestUrl.toString());
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
         return response;
     }
 
@@ -144,43 +87,20 @@ public class CryptoCompareApi {
      * If the opposite pair trades we invert it (eg.: BTC-XMR).
      * @param fsyms From Symbol
      * @param tsyms To Symbols, include multiple symbols
-     * @param e Name of exchange. Default: CCCAGG
-     * @param extraParams Name of your application
-     * @param sign If set to true, the server will sign the requests
-     * @param tryConversion If set to false, it will try to get values without using any conversion at all
+     * @param optionalParams
      * @return
      */
-    public JsonObject priceMultiFull(String fsyms, String tsyms, Optional<String> e, Optional<String> extraParams,
-                                     Optional<Boolean> sign, Optional<Boolean> tryConversion) {
-        StringBuilder requestUrl = new StringBuilder();
-        requestUrl.append(this.BASE_URL)
+    public JsonObject priceMultiFull(String fsyms, String tsyms, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
                 .append("pricemultifull?fsyms=")
                 .append(fsyms)
                 .append("&tsyms=")
                 .append(tsyms);
 
-        if (e != null && e.isPresent()) {
-            requestUrl.append("&e=")
-                    .append(e.get());
-        }
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
-        if (extraParams != null && extraParams.isPresent()) {
-            String exchangeName = extraParams.get().replaceAll(" ", "%20");
-            requestUrl.append("&extraParams=")
-                    .append(exchangeName);
-        }
-
-        if (sign != null && sign.isPresent()) {
-            requestUrl.append("&sign=")
-                    .append(sign.get().toString());
-        }
-
-        if (tryConversion != null && tryConversion.isPresent()) {
-            requestUrl.append("&tryConversion=")
-                    .append(tryConversion.get().toString());
-        }
-
-        JsonObject response = getResponseBody(requestUrl.toString());
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
         return response;
     }
 
@@ -191,15 +111,12 @@ public class CryptoCompareApi {
      * @param fsym From Symbol
      * @param tsym To Symbols
      * @param e Name of exchanges, include multiple
-     * @param extraParams Name of your application
-     * @param sign If set to true, the server will sign the requests
-     * @param tryConversion If set to false, it will try to get values without using any conversion at all
+     * @param optionalParams
      * @return
      */
-    public JsonObject generateAvg(String fsym, String tsym, String e, Optional<String> extraParams,
-                                  Optional<Boolean> sign, Optional<Boolean> tryConversion) {
-        StringBuilder requestUrl = new StringBuilder();
-        requestUrl.append(this.BASE_URL)
+    public JsonObject generateAvg(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
                 .append("generateAvg?fsym=")
                 .append(fsym)
                 .append("&tsym=")
@@ -207,59 +124,241 @@ public class CryptoCompareApi {
                 .append("&e=")
                 .append(e);
 
-        if (extraParams != null && extraParams.isPresent()) {
-            String exchangeName = extraParams.get().replaceAll(" ", "%20");
-            requestUrl.append("&extraParams=")
-                    .append(exchangeName);
-        }
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
 
-        if (sign != null && sign.isPresent()) {
-            requestUrl.append("&sign=")
-                    .append(sign.get().toString());
-        }
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
 
-        if (tryConversion != null && tryConversion.isPresent()) {
-            requestUrl.append("&tryConversion=")
-                    .append(tryConversion.get().toString());
-        }
+    /**
+     * Get day average price. The values are based on hourly vwap data and the average can
+     * be calculated in different waysIt uses BTC conversion if data is not available because
+     * the coin is not trading in the specified currency. If tryConversion is set to false
+     * it will give you the direct data. If no toTS is given it will automatically do the
+     * current day. Also for different timezones use the UTCHourDiff paramThe calculation
+     * types are: HourVWAP - a VWAP of the hourly close price,MidHighLow - the average
+     * between the 24 H high and low.VolFVolT - the total volume from / the total volume to
+     * (only available with tryConversion set to false so only for direct trades but the
+     * value should be the most accurate price)
+     * @param fsym From Symbol
+     * @param tsym To Symbols
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject dayAvg(String fsym, String tsym, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("dayAvg?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym);
 
-        JsonObject response = getResponseBody(requestUrl.toString());
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
         return response;
     }
 
 
+    /**
+     * Get the price of any cryptocurrency in any other currency that you need at a given
+     * timestamp. The price comes from the daily info - so it would be the price at the
+     * end of the day GMT based on the requested TS. If the crypto does not trade directly
+     * into the toSymbol requested, BTC will be used for conversion. Tries to get direct
+     * trading pair data, if there is none or it is more than 30 days before the ts requested,
+     * it uses BTC conversion. If the opposite pair trades we invert it (eg.: BTC-XMR)
+     * @param fsym From Symbol
+     * @param tsym To Symbols, include multiple
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject priceHistorical(String fsym, String tsym, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("pricehistorical?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym);
 
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
 
 
     /**
-     * Get the response body given a url in the form of a JsonObject
-     * @param requestUrl
+     * Get data for a currency pair. It returns general block explorer information,
+     * aggregated data and individual data for each exchange available.
+     * Warning: This api is getting abused and will be moved to a min-api path in the near future. Please try not to use it.
+     * @param fsym The symbol of the currency you want to get that for
+     * @param tsym The symbol of the currency that data will be in.
      * @return
      */
-    private JsonObject getResponseBody(final String requestUrl) {
-        String result = null;
-        try {
-            // Connect to the requested URL
-            URL url = new URL(requestUrl);
-            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
-            httpsURLConnection.setRequestMethod("GET");
+    public JsonObject coinSnapshot(String fsym, String tsym) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("coinsnapshot?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym);
 
-            // Stream the response
-            BufferedReader reader = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
-
-            // Write each line of the response into a buffer
-            StringBuilder sb = new StringBuilder();
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-
-            result = sb.toString();
-        } catch (IOException ex) {
-            logger.error("Error getting response body for {}", requestUrl);
-        }
-
-        JsonObject jsonObject = (JsonObject) this.jsonParser.parse(result);
-        return jsonObject;
+        JsonObject response = ApiUtils.getResponseBody(sb.toString());
+        return response;
     }
+
+    /**
+     * Get the general, subs (used to connect to the streamer and to figure out what
+     * exchanges we have data for and what are the exact coin pairs of the coin) and
+     * the aggregated prices for all pairs available.
+     * @param id The id of the coin you want data for
+     * @return
+     */
+    public JsonObject coinSnapshotFullById(Integer id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("coinsnapshotfullbyid?id=")
+                .append(id.toString());
+
+        JsonObject response = ApiUtils.getResponseBody(sb.toString());
+        return response;
+    }
+
+    /**
+     * Get CryptoCompare website, Facebook, code repository, Twitter and Reddit data
+     * for coins. If called with the id of a cryptopian you just get data from our website
+     * that is available to the public.
+     * @param id The id of the coin/exchange you want social data for
+     * @return
+     */
+    public JsonObject socialStats(Integer id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("socialstats?id=")
+                .append(id.toString());
+
+        JsonObject response = ApiUtils.getResponseBody(sb.toString());
+        return response;
+    }
+
+    /**
+     * Get open, high, low, close, volumefrom and volumeto from the each minute
+     * historical data. This data is only stored for 7 days, if you need more, use the
+     * hourly or daily path. It uses BTC conversion if data is not available because the
+     * coin is not trading in the specified currency
+     * @param fsym From Symbol
+     * @param tsym To Symbols
+     * @param e Name of exchange
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject histoMinute(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("histominute?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym)
+                .append("&e=")
+                .append(e);
+
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
+
+
+    /**
+     * Get open, high, low, close, volumefrom and volumeto from the each hour historical
+     * data. It uses BTC conversion if data is not available because the coin is not trading
+     * in the specified currency.
+     * @param fsym From Symbol
+     * @param tsym To Symbols
+     * @param e Name of exchange
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject histoHour(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("histohour?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym)
+                .append("&e=")
+                .append(e);
+
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
+
+
+    /**
+     * Get open, high, low, close, volumefrom and volumeto daily historical data. The values
+     * are based on 00:00 GMT time. It uses BTC conversion if data is not available because
+     * the coin is not trading in the specified currency.
+     * @param fsym From Symbol
+     * @param tsym To Symbols
+     * @param e Name of exchange
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject histoDay(String fsym, String tsym, String e, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("histoday?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym)
+                .append("&e=")
+                .append(e);
+
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
+
+
+    /**
+     * Used to get all the mining equipment available on the website. It returns an array
+     * of mining equipment objects
+     * @return
+     */
+    public JsonObject miningEquipment() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("miningequipment");
+
+        JsonObject response = ApiUtils.getResponseBody(sb.toString());
+        return response;
+    }
+
+
+    /**
+     * Get top pairs by volume for a currency (always uses our aggregated data). The number
+     * of pairs you get is the minimum of the limit you set (default 5) and the total number
+     * of pairs available
+     * @param fsym From Symbol
+     * @param tsym To Symbol
+     * @param optionalParams
+     * @return
+     */
+    public JsonObject topPairs(String fsym, String tsym, Map<String, Object> optionalParams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.BASE_URL)
+                .append("top/pairs?fsym=")
+                .append(fsym)
+                .append("&tsym=")
+                .append(tsym);
+
+        String requestUrl = ApiUtils.appendOptionalParameters(sb.toString(), optionalParams);
+
+        JsonObject response = ApiUtils.getResponseBody(requestUrl);
+        return response;
+    }
+
 }
