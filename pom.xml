@@ -4,11 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.crypto</groupId>
+    <groupId>com.github.jeffreytai</groupId>
     <artifactId>cryptocompare-api-wrapper</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>8</java.version>
         <slf4j.version>1.7.25</slf4j.version>
         <gson.version>2.8.2</gson.version>
