@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jeffreytai/cryptocompare-api-wrapper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.jeffreytai/cryptocompare-api-wrapper)
+
 # Java CryptoCompare Unofficial API Client
 
 This library is designed to help you make your own projects that interact with the [CryptoCompare API](https://www.cryptocompare.com/api/#). There is a large amount of data that the API has made available. This repository aims to provide access to all of their current functionalities.
@@ -43,5 +45,13 @@ This API currently has the following functions
 * Mining equipment
 * Top pairs
 
-### Coming soon
-Maven dependency package
+### Dependency Management
+
+##### Maven
+```
+<dependency>
+    <groupId>com.github.jeffreytai</groupId>
+    <artifactId>cryptocompare-api-wrapper</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
