@@ -55,3 +55,13 @@ This API currently has the following functions
     <version>1.0.0</version>
 </dependency>
 ```
+
+##### Gradle
+```
+compile 'com.github.jeffreytai:cryptocompare-api-wrapper:1.0.0'
+```
+
+##### Ivy
+```
+<dependency org="com.github.jeffreytai" name="cryptocompare-api-wrapper" rev="1.0.0" />
+```
